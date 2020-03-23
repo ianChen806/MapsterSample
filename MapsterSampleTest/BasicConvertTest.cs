@@ -1,23 +1,13 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using FluentAssertions;
 using Mapster;
 using MapsterSampleTest.Model;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace MapsterSampleTest
 {
-    public class MapsterTest
+    public class BasicConvertTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public MapsterTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
         [Fact]
         public void BasicConvert()
         {
