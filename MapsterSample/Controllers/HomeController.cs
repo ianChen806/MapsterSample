@@ -1,26 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using MapsterSample.Models;
+using MapsterSampleTest.Model;
+using Newtonsoft.Json;
 
 namespace MapsterSample.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IMapper mapper)
         {
-            _logger = logger;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public string Index()
         {
-            return View();
+            var classA = new ClassA()
+            {
+                Id = 1,
+                Name = "Test",
+                Price = 12.34m
+            };
+            var classB = _mapper.Map<ClassB>(classA);
+
+            return JsonConvert.SerializeObject(classB);
+        }
+
+        public string Index2()
+        {
+            var classA = new ClassB()
+            {
+                Id = 1,
+                Name = "Test",
+                Price = 12.34m
+            };
+            var classC = _mapper.Map<ClassC>(classA);
+
+            return JsonConvert.SerializeObject(classC);
         }
 
         public IActionResult Privacy()

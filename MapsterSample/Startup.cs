@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Mapster;
+using MapsterMapper;
+using MapsterSampleTest.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,13 +18,28 @@ namespace MapsterSample
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton(GetAdapterConfig());
+            services.AddScoped<IMapper, ServiceMapper>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        private TypeAdapterConfig GetAdapterConfig()
+        {
+            var config = new TypeAdapterConfig();
+
+            config.NewConfig<ClassA, ClassB>()
+                  .Map(b => b.Name, a => $"{a.Id}_{a.Price}");
+
+            config.NewConfig<ClassB, ClassC>()
+                  .Ignore(c => c.Name)
+                  .Map(c => c.Id, b => b.Id + 2);
+
+            return config;
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -54,5 +67,9 @@ namespace MapsterSample
                                              pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+    }
+
+    public class ClassAConfig
+    {
     }
 }
